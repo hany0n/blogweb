@@ -1,21 +1,18 @@
 import express from 'express';
 import multer from 'multer';
-
+import cors from 'cors';
 import mongoose from 'mongoose';
 
-import * as UserController from './controllers/UserController.js';
 
-import * as PostController from './controllers/PostController.js';
+import {UserController, PostController} from './controllers/index.js';
 
 import {registerValidator, loginValidator, postCreateValidation} from './validations.js';
 
-
-import checkAuth from './utils/checkAuth.js';
-import handleValidationErrors from './utils/handleValidationErrors.js';
+import {handleValidationErrors, checkAuth} from './utils/index.js';
 
 
 mongoose.connect(
-    'mongodb+srv://tzunch:1234@cluster0.yquh1rz.mongodb.net/blog?retryWrites=true&w=majority&appName=Cluster0')
+    'mongodb+srv://dagger2010:QtZtOGAsNcfO7Pr9@cluster0.vwv78wd.mongodb.net/U_blog?retryWrites=true&w=majority&appName=Cluster0')
     .then(() => 
     console.log('DB is UP'))
     .catch((err) => console.log('DB connection error', err));
@@ -37,7 +34,7 @@ const upload = multer({storage});
 
 //читаем жсон который приходит нам в запросе
 app.use(express.json());
-
+app.use(cors());
 app.use('/uploads', express.static('uploads'));
 
 //авторизация
@@ -54,7 +51,11 @@ app.post('/upload', checkAuth,upload.single('image'), (req, res) => {
 });
 
 
+app.get('/tags', PostController.getLastTags);
+
+
 app.get('/posts', PostController.getAll);
+//app.get('/posts/tags', PostController.getLastTags);
 app.get('/posts/:id', PostController.getOne);
 app.post('/posts', checkAuth,postCreateValidation, handleValidationErrors, PostController.create);
 app.delete('/posts/:id', checkAuth, PostController.remove);

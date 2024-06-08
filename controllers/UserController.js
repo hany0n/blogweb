@@ -110,3 +110,23 @@ export const getMe = async (req, res) => {
         });
     }
 };
+
+/* export const likeBlog = async (req, res) => {
+    try {
+        const blog = await Blog.findById(req.params.id)
+        if(blog.likes.includes(req.user.id)){
+            blog.likes = blog.likes.filter((userId) => userId !== req.user.id)
+            await blog.save()
+
+            return res.status(200).json({msg: 'Successfully unliked the blog'})
+        } else {
+            blog.likes.push(req.user.id)
+            await blog.save()
+
+            return res.status(200).json({msg: "Successfully liked the blog"})
+        }
+
+    } catch (error) {
+        return res.status(500).json(error)
+    }
+}; */
